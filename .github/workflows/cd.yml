@@ -7,27 +7,55 @@ on:
 
 jobs:
 
-  docker:
-    name: Build Docker Image
+  deploy:
+    name: Deploy Docker with Terraform
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
 
-      - name: Build Docker image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: false
-          tags: india-devops-platform:${{ github.sha }}
-
-      - name: Deployment Summary
+      - name: Check Docker
         run: |
-          echo "CD pipeline completed"
-          echo "Docker image built successfully"
-          echo "Image tag: india-devops-platform:${{ github.sha }}"
+          docker version
+          docker info
 
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+
+      - name: Terraform Init
+        working-directory: terraform
+        run: |
+          terraform init
+
+
+      - name: Terraform Validate
+        working-directory: terraform
+        run: |
+          terraform validate
+
+
+      - name: Terraform Plan
+        working-directory: terraform
+        run: |
+          terraform plan
+
+
+      - name: Terraform Apply
+        working-directory: terraform
+        run: |
+          terraform apply -auto-approve
+
+
+      - name: Verify Docker Container
+        run: |
+          docker ps
+
+
+      - name: Test Application
+        run: |
+          curl --fail http://localhost:5000/health

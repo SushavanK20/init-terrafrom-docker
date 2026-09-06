@@ -1,87 +1,70 @@
-# init-terrafrom-docker
+# 🇮🇳 init-terrafrom-docker
 
-A production-style **Python Flask DevOps project** designed to demonstrate modern software development, containerization, Infrastructure as Code, CI/CD, cloud deployment, AI integration, and observability.
+A Python Flask application demonstrating a complete local DevOps workflow using **Flask, Pytest, Docker, Terraform, Git, and GitHub Actions**.
 
-The project starts with a **free local development environment** using Docker and Terraform and progressively evolves toward an **Azure-based cloud deployment**.
+The project uses Terraform to manage the Docker image and container, while GitHub Actions automates CI and CD.
 
 ---
 
-## 🚀 Project Overview
-
-The goal of this project is to build a complete DevOps lifecycle around a Python Flask application.
-
-### Current Architecture
+## 🏗️ Architecture
 
 ```text
-                    ┌──────────────────┐
-                    │    Developer     │
-                    └────────┬─────────┘
-                             │
-                             ▼
-                    ┌──────────────────┐
-                    │      GitHub      │
-                    └────────┬─────────┘
-                             │
-                    Push to release
-                             │
-                             ▼
-                    ┌──────────────────┐
-                    │ GitHub Actions   │
-                    │       CI         │
-                    └────────┬─────────┘
-                             │
-              ┌──────────────┴──────────────┐
-              │                             │
-              ▼                             ▼
-       Python Tests                 Terraform Validation
-              │                             │
-              └──────────────┬──────────────┘
-                             │
-                            PASS
-                             │
-                             ▼
-                     PR → main
-                             │
-                           MERGE
-                             │
-                             ▼
-                    ┌──────────────────┐
-                    │ GitHub Actions   │
-                    │       CD         │
-                    └────────┬─────────┘
-                             │
-                             ▼
-                    ┌──────────────────┐
-                    │   Docker Build   │
-                    └────────┬─────────┘
-                             │
-                             ▼
-                     Future Azure
-                     Deployment
+                    Developer
+                        │
+                        ▼
+                      GitHub
+                        │
+            ┌───────────┴───────────┐
+            │                       │
+       release branch            main branch
+            │                       │
+            ▼                       ▼
+           CI                      CD
+            │                       │
+     ┌──────┴──────┐                │
+     │             │                │
+ Python Tests  Terraform           │
+               Validation          │
+               + Plan              │
+     │             │                │
+     └──────┬──────┘                │
+            │                       │
+           PASS                     │
+            │                       │
+            └──── PR ────► Merge ──┘
+                                    │
+                                    ▼
+                              Terraform
+                                    │
+                                    ▼
+                              Docker Provider
+                               │          │
+                               ▼          ▼
+                         Docker Image  Container
+                               │          │
+                               └────┬─────┘
+                                    ▼
+                              Flask :5000
 ```
 
 ---
 
-# 🛠️ Technology Stack
+## 🛠️ Technology Stack
 
-| Category               | Technology                           |
-| ---------------------- | ------------------------------------ |
-| Programming Language   | Python                               |
-| Web Framework          | Flask                                |
-| Testing                | Pytest                               |
-| Containerization       | Docker                               |
-| Infrastructure as Code | Terraform                            |
-| CI/CD                  | GitHub Actions                       |
-| Container Registry     | GitHub Container Registry            |
-| Cloud                  | Microsoft Azure                      |
-| AI                     | Python AI/LLM integration            |
-| Monitoring             | Azure Monitor / Application Insights |
-| Version Control        | Git / GitHub                         |
-| Operating System       | Windows / Linux                      |
+| Category               | Technology      |
+| ---------------------- | --------------- |
+| Language               | Python 3.12     |
+| Web Framework          | Flask 3.1.2     |
+| Testing                | Pytest          |
+| Containerization       | Docker          |
+| Infrastructure as Code | Terraform       |
+| Terraform Provider     | Docker Provider |
+| CI/CD                  | GitHub Actions  |
+| Version Control        | Git / GitHub    |
 
 ---
 
-# 📁 Project Structure
+## 📁 Project Structure
 
 ```text
 init-terrafrom-docker/
@@ -89,7 +72,6 @@ init-terrafrom-docker/
 ├── app/
 │   ├── __init__.py
 │   ├── routes.py
-│   │
 │   └── templates/
 │       └── index.html
 │
@@ -113,11 +95,11 @@ init-terrafrom-docker/
 
 ---
 
-# 🌐 Application
+# 🌐 Flask Application
 
-The project is a Flask web application with an India-themed landing page.
+The application is a simple India-themed Flask web application.
 
-The application exposes the following endpoints:
+## Endpoints
 
 ### Home
 
@@ -125,7 +107,7 @@ The application exposes the following endpoints:
 GET /
 ```
 
-Displays the India DevOps Platform landing page.
+Displays the application landing page.
 
 ### Health Check
 
@@ -152,7 +134,7 @@ Example response:
 
 ```json
 {
-    "application": "India DevOps Platform",
+    "application": "init-terrafrom-docker",
     "environment": "local",
     "version": "1.0.0",
     "status": "running"
@@ -161,14 +143,7 @@ Example response:
 
 ---
 
-# 🐍 Running Flask Locally
-
-Clone the repository:
-
-```bash
-git clone <your-repository-url>
-cd init-terrafrom-docker
-```
+# 🐍 Run Flask Locally
 
 Create a virtual environment:
 
@@ -176,6 +151,11 @@ Create a virtual environment:
 
 ```powershell
 python -m venv venv
+```
+
+Activate it:
+
+```powershell
 .\venv\Scripts\Activate.ps1
 ```
 
@@ -198,7 +178,7 @@ Open:
 http://localhost:5000
 ```
 
-Health check:
+Health endpoint:
 
 ```text
 http://localhost:5000/health
@@ -208,7 +188,7 @@ http://localhost:5000/health
 
 # 🧪 Testing
 
-The project uses **pytest**.
+The project uses Pytest for automated testing.
 
 Run:
 
@@ -216,7 +196,7 @@ Run:
 python -m pytest
 ```
 
-The test suite covers:
+Current tests cover:
 
 * Home page
 * Health endpoint
@@ -232,15 +212,15 @@ Example:
 
 # 🐳 Docker
 
-The Flask application can be packaged as a Docker image.
+The application is containerized using Docker.
 
-Build:
+## Build Image
 
 ```powershell
 docker build -t india-devops-platform:1.0.0 .
 ```
 
-Run:
+## Run Container
 
 ```powershell
 docker run -d `
@@ -249,31 +229,31 @@ docker run -d `
   india-devops-platform:1.0.0
 ```
 
-Open:
+Application:
 
 ```text
 http://localhost:5000
 ```
 
-Check the container:
+## Check Container
 
 ```powershell
 docker ps
 ```
 
-View logs:
+## View Logs
 
 ```powershell
 docker logs india-devops-platform
 ```
 
-Stop:
+## Stop Container
 
 ```powershell
 docker stop india-devops-platform
 ```
 
-Remove:
+## Remove Container
 
 ```powershell
 docker rm india-devops-platform
@@ -283,40 +263,51 @@ docker rm india-devops-platform
 
 # 🏗️ Terraform
 
-Terraform is used to manage the Docker infrastructure locally.
+Terraform manages the Docker infrastructure.
 
-Current Terraform configuration uses the Docker provider.
+The current Terraform configuration uses the:
 
 ```text
-Terraform
-    │
-    ▼
-Docker Provider
-    │
-    ├── Docker Image
-    │
-    └── Docker Container
+kreuzwerker/docker
 ```
 
-Navigate to Terraform:
+provider.
+
+Terraform manages:
+
+```text
+Docker Image
+     │
+     ▼
+Docker Container
+     │
+     ▼
+Flask Application
+```
+
+---
+
+## Terraform Commands
+
+Navigate to the Terraform directory:
 
 ```powershell
 cd terraform
 ```
 
-Initialize:
+Initialize Terraform:
 
 ```powershell
 terraform init
 ```
 
-Format:
+Format configuration:
 
 ```powershell
 terraform fmt
 ```
 
-Validate:
+Validate configuration:
 
 ```powershell
 terraform validate
@@ -340,69 +331,62 @@ Destroy infrastructure:
 terraform destroy
 ```
 
+Return to project root:
+
+```powershell
+cd ..
+```
+
 ---
 
-# 🔄 Terraform Workflow
+# 🔄 Terraform Deployment
 
-Terraform follows a declarative Infrastructure as Code approach.
+Terraform is responsible for creating the Docker image and Docker container.
 
 ```text
-main.tf
-   │
-   ▼
-terraform init
-   │
-   ▼
-terraform validate
-   │
-   ▼
-terraform plan
-   │
-   ▼
 terraform apply
-   │
-   ▼
-Docker Infrastructure
+       │
+       ▼
+Docker Provider
+       │
+       ├── Create Docker Image
+       │
+       └── Create Docker Container
+                    │
+                    ▼
+              Flask :5000
 ```
 
-Terraform manages:
-
-```text
-Docker Image
-      +
-Docker Container
-```
-
-The local Docker implementation allows Terraform and Infrastructure as Code concepts to be learned without requiring an Azure subscription.
+The Docker image is built from the project's Dockerfile using the project root as the build context.
 
 ---
 
-# 🔁 CI/CD Pipeline
+# ⚙️ CI/CD
 
-The project uses GitHub Actions for automation.
+GitHub Actions is used to automate the development and deployment workflow.
 
-The branch strategy is:
+The current branch strategy is:
 
 ```text
 feature/*
      │
      ▼
-   Pull Request
+Pull Request
      │
      ▼
-  release
+release
      │
      ▼
-     CI
+CI
      │
      ▼
-   Pull Request
+Pull Request
      │
      ▼
-    main
+main
      │
      ▼
-    CD
+CD
 ```
 
 ---
@@ -411,509 +395,199 @@ feature/*
 
 CI runs when code is pushed to the `release` branch.
 
-Workflow:
-
 ```text
-Push to release
+Push → release
        │
        ▼
 GitHub Actions
        │
-       ├── Checkout
+       ├── Checkout code
        │
        ├── Setup Python
        │
        ├── Install dependencies
        │
-       ├── Run pytest
+       ├── Run Pytest
        │
-       ├── Terraform fmt
+       ├── Terraform fmt -check
        │
        ├── Terraform init
        │
-       └── Terraform validate
+       ├── Terraform validate
+       │
+       └── Terraform plan
 ```
 
-The CI pipeline ensures that the application and Infrastructure as Code are valid before the code moves toward production.
+### CI validates
+
+* Python application tests
+* Terraform formatting
+* Terraform initialization
+* Terraform configuration
+* Terraform execution plan
+
+CI must pass before changes are promoted toward `main`.
 
 ---
 
 # 🚀 Continuous Deployment
 
-CD runs when changes reach the `main` branch.
+CD runs when changes are merged into the `main` branch.
 
-A pull request should be used to merge changes into `main`.
-
-```text
-release
-   │
-   ▼
-Pull Request
-   │
-   ▼
-Review
-   │
-   ▼
-Merge
-   │
-   ▼
-main
-   │
-   ▼
-GitHub Actions CD
-```
-
-Current CD pipeline:
+The current CD workflow uses Terraform to deploy the Docker infrastructure.
 
 ```text
-Checkout
-   │
-   ▼
-Docker Buildx
-   │
-   ▼
-Build Docker Image
-   │
-   ▼
-Version image using Git SHA
+Merge → main
+     │
+     ▼
+GitHub Actions
+     │
+     ├── Checkout code
+     │
+     ├── Check Docker
+     │
+     ├── Setup Terraform
+     │
+     ├── Terraform init
+     │
+     ├── Terraform validate
+     │
+     ├── Terraform plan
+     │
+     ├── Terraform apply
+     │
+     ├── Verify Docker container
+     │
+     └── Test /health
 ```
 
-Docker images are tagged using the Git commit SHA:
+Terraform performs the actual Docker deployment:
 
 ```text
-india-devops-platform:<git-sha>
+GitHub Actions
+      │
+      ▼
+terraform apply
+      │
+      ▼
+Docker Provider
+      │
+      ├──────────────┐
+      ▼              ▼
+Docker Image    Docker Container
+                     │
+                     ▼
+                Flask App
+                     │
+                     ▼
+                Port 5000
 ```
-
-This provides traceability between a deployment and the exact source-code version that produced it.
 
 ---
 
-# 📦 GitHub Container Registry
+# 🔐 Current Workflow
 
-The next stage of the pipeline will publish Docker images to **GitHub Container Registry (GHCR)**.
-
-Future pipeline:
-
-```text
-GitHub
-   │
-   ▼
-CI
-   │
-   ▼
-Docker Build
-   │
-   ▼
-GHCR
-   │
-   ▼
-Azure
-```
-
-This allows the deployment environment to pull a specific version of the application image.
-
----
-
-# ☁️ Azure Deployment
-
-The local Docker/Terraform implementation will eventually be migrated to Azure.
-
-Target architecture:
-
-```text
-                   GitHub
-                      │
-                      ▼
-                GitHub Actions
-                      │
-             ┌────────┴────────┐
-             │                 │
-             ▼                 ▼
-            CI                CD
-                               │
-                               ▼
-                       GitHub Container
-                           Registry
-                               │
-                               ▼
-                            Azure
-                               │
-                    ┌──────────┴──────────┐
-                    │                     │
-                    ▼                     ▼
-              Azure Container       Azure Monitor
-               Environment          / App Insights
-```
-
-Potential Azure services:
-
-* Azure Container Apps
-* Azure Container Registry
-* Azure Monitor
-* Application Insights
-* Azure Key Vault
-* Azure Storage
-* Azure networking
-
-The exact Azure architecture will be introduced progressively.
-
----
-
-# 🤖 AI Integration
-
-AI will be added as a separate application capability.
-
-Possible features:
-
-* DevOps assistant
-* Application log analysis
-* Error explanation
-* Deployment status assistant
-* Terraform configuration assistant
-* AI-powered health analysis
-* Natural-language infrastructure queries
-
-Potential architecture:
-
-```text
-User
- │
- ▼
-Flask API
- │
- ▼
-AI Service
- │
- ▼
-LLM
-```
-
-The AI component will be designed so that the project can initially run using free/local options where practical.
-
----
-
-# 📊 Observability
-
-A production-oriented DevOps project needs more than deployment.
-
-The future observability layer will cover:
-
-### Metrics
-
-* Application health
-* Request count
-* Response time
-* Container health
-* CPU/memory usage
-
-### Logs
-
-```text
-Flask
-  │
-  ▼
-Container Logs
-  │
-  ▼
-Centralized Logging
-```
-
-### Monitoring
-
-Future implementation can use:
-
-* Azure Monitor
-* Application Insights
-* Structured application logs
-* Health endpoints
-* Container health checks
-
----
-
-# 🔐 Security
-
-Security will be progressively added to the project.
-
-Planned practices:
-
-* Never commit secrets
-* Use GitHub Secrets
-* Use Azure Managed Identity where possible
-* Use Azure Key Vault for sensitive configuration
-* Scan Docker images
-* Scan dependencies
-* Apply least-privilege permissions
-* Protect the `main` branch
-* Require pull-request reviews
-
-Example:
+The complete workflow implemented so far is:
 
 ```text
 Developer
     │
     ▼
-GitHub
-    │
-    ├── No secrets in source code
-    │
-    ▼
-GitHub Actions
-    │
-    ├── Secrets
-    │
-    ▼
-Azure
-```
-
----
-
-# 🌿 Git Branching Strategy
-
-Recommended branch model:
-
-```text
-main
- │
- └── Production
-```
-
-```text
-release
- │
- └── Integration / CI
-```
-
-```text
 feature/*
- │
- └── Development
+    │
+    ▼
+Pull Request
+    │
+    ▼
+release
+    │
+    ▼
+CI
+ ├── Pytest
+ ├── Terraform fmt
+ ├── Terraform init
+ ├── Terraform validate
+ └── Terraform plan
+    │
+    ▼
+Pull Request
+    │
+    ▼
+main
+    │
+    ▼
+CD
+ ├── Terraform init
+ ├── Terraform validate
+ ├── Terraform plan
+ └── Terraform apply
+    │
+    ▼
+Docker Image
+    │
+    ▼
+Docker Container
+    │
+    ▼
+Flask Application
 ```
 
-Example:
+---
+
+# 📊 Project Status
+
+| Component                   | Status        |
+| --------------------------- | ------------- |
+| Flask Application           | ✅ Complete    |
+| India-themed UI             | ✅ Complete    |
+| Health API                  | ✅ Complete    |
+| Status API                  | ✅ Complete    |
+| Pytest                      | ✅ Complete    |
+| Dockerfile                  | ✅ Complete    |
+| Docker Image                | ✅ Complete    |
+| Docker Container            | ✅ Complete    |
+| Terraform Docker Provider   | ✅ Complete    |
+| Terraform Validation        | ✅ Complete    |
+| Terraform Plan              | ✅ Complete    |
+| Git Repository              | ✅ Complete    |
+| GitHub Repository           | ✅ Complete    |
+| GitHub Actions CI           | ✅ Complete    |
+| GitHub Actions CD           | ✅ Complete    |
+| Terraform Docker Deployment | ✅ Implemented |
+
+---
+
+# 🎯 DevOps Workflow
+
+The project currently demonstrates:
 
 ```text
-feature/add-ai
-       │
-       ▼
-     PR
-       │
-       ▼
-   release
-       │
-       ▼
-      CI
-       │
-       ▼
-     PR
-       │
-       ▼
-      main
-       │
-       ▼
-      CD
+SOURCE CONTROL
+      ↓
+    GitHub
+      ↓
+CONTINUOUS INTEGRATION
+      ↓
+Python Tests
+      ↓
+Terraform Validation
+      ↓
+Terraform Plan
+      ↓
+CONTINUOUS DEPLOYMENT
+      ↓
+Terraform Apply
+      ↓
+Docker Image
+      ↓
+Docker Container
+      ↓
+Flask Application
 ```
 
----
-
-# 📋 DevOps Project Roadmap
-
-## Phase 1 — Python Flask
-
-* [x] Flask application
-* [x] Application routes
-* [x] Health endpoint
-* [x] API status endpoint
-* [x] India-themed frontend
-
-## Phase 2 — Testing
-
-* [x] Pytest
-* [x] Flask endpoint tests
-* [x] Local test execution
-
-## Phase 3 — Docker
-
-* [x] Dockerfile
-* [x] Docker image
-* [x] Containerized Flask application
-* [x] Local container execution
-
-## Phase 4 — Terraform
-
-* [x] Terraform configuration
-* [x] Docker provider
-* [x] Terraform init
-* [x] Terraform format
-* [x] Terraform validation
-* [x] Terraform plan
-* [ ] Terraform apply workflow
-* [ ] Terraform state management improvements
-
-## Phase 5 — GitHub Actions
-
-* [x] CI workflow
-* [x] Python tests in CI
-* [x] Terraform validation in CI
-* [x] Release branch workflow
-* [x] CD workflow
-* [x] Docker build in CD
-
-## Phase 6 — Container Registry
-
-* [ ] GitHub Container Registry
-* [ ] Docker image publishing
-* [ ] Image versioning
-* [ ] Image retention strategy
-
-## Phase 7 — Azure
-
-* [ ] Azure infrastructure
-* [ ] Azure Container Registry
-* [ ] Azure Container Apps
-* [ ] Terraform Azure provider
-* [ ] Azure deployment
-* [ ] Environment configuration
-
-## Phase 8 — AI
-
-* [ ] AI API
-* [ ] DevOps assistant
-* [ ] Log analysis
-* [ ] AI health analysis
-
-## Phase 9 — Observability
-
-* [ ] Application logging
-* [ ] Metrics
-* [ ] Monitoring
-* [ ] Application Insights
-* [ ] Alerts
-* [ ] Dashboards
-
-## Phase 10 — Production Hardening
-
-* [ ] Security scanning
-* [ ] Dependency scanning
-* [ ] Docker image scanning
-* [ ] Secrets management
-* [ ] Branch protection
-* [ ] Infrastructure security
-* [ ] Disaster recovery strategy
-
----
-
-# 🎯 Project Goals
-
-This project is designed to demonstrate practical experience with:
-
-```text
-Python
-  +
-Flask
-  +
-Testing
-  +
-Docker
-  +
-Terraform
-  +
-Git
-  +
-GitHub
-  +
-GitHub Actions
-  +
-CI/CD
-  +
-Container Registry
-  +
-Azure
-  +
-AI
-  +
-Observability
-```
-
-Rather than creating isolated tutorials, the project connects these technologies into one complete DevOps lifecycle.
-
----
-
-# 💡 What This Project Demonstrates
-
-A successful implementation demonstrates the ability to:
-
-* Build a Python web application
-* Write automated tests
-* Containerize applications
-* Manage infrastructure using Terraform
-* Design Git branching strategies
-* Implement CI/CD pipelines
-* Build versioned Docker images
-* Publish container images
-* Deploy applications to cloud infrastructure
-* Manage infrastructure as code
-* Implement monitoring and logging
-* Integrate AI capabilities
-* Apply DevSecOps practices
-
----
-
-# 🚦 Current Status
-
-**Project Status: 🟢 Active Development**
-
-Current implementation:
-
-```text
-Flask              ✅
-Pytest              ✅
-Docker              ✅
-Terraform           ✅
-Git                 ✅
-GitHub              ✅
-GitHub Actions CI   ✅
-GitHub Actions CD   ✅
-Docker Build in CD  ✅
-GHCR                🔄 Next
-Azure               🔜
-AI                  🔜
-Observability       🔜
-Security Hardening  🔜
-```
-
----
-
-# 👨‍💻 Development Philosophy
-
-The project follows a progressive DevOps approach:
-
-```text
-Build
-  ↓
-Test
-  ↓
-Package
-  ↓
-Validate
-  ↓
-Automate
-  ↓
-Deploy
-  ↓
-Monitor
-  ↓
-Improve
-```
-
-The infrastructure starts locally to keep development **free and reproducible**, then evolves toward a cloud-ready architecture.
-
----
-
-# 📜 License
-
-This project is intended for educational, portfolio, and DevOps learning purposes.
+This provides a complete working **local DevOps CI/CD workflow** using Python, Docker, Terraform, and GitHub Actions.
 
 ```
 
-This README is intentionally written as a **portfolio-quality project README**, not just a list of commands. It documents what you've already completed while clearly showing the roadmap toward **Azure + AI + observability + DevSecOps**.
+This version documents **only what we've actually built so far** and removes the future-scope sections.
 ```
