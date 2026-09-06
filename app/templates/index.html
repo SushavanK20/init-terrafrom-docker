@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>India DevOps Platform</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            color: white;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(255, 153, 51, 0.25), transparent 30%),
+                radial-gradient(circle at 80% 70%, rgba(19, 136, 8, 0.25), transparent 30%),
+                linear-gradient(135deg, #050816, #0b1224 50%, #07130b);
+
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+
+        .background {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 50%;
+            animation: float 12s infinite linear;
+        }
+
+        .particle:nth-child(1) {
+            left: 10%;
+            top: 80%;
+            animation-delay: 0s;
+        }
+
+        .particle:nth-child(2) {
+            left: 30%;
+            top: 70%;
+            animation-delay: 2s;
+        }
+
+        .particle:nth-child(3) {
+            left: 60%;
+            top: 90%;
+            animation-delay: 4s;
+        }
+
+        .particle:nth-child(4) {
+            left: 80%;
+            top: 60%;
+            animation-delay: 6s;
+        }
+
+        .particle:nth-child(5) {
+            left: 90%;
+            top: 85%;
+            animation-delay: 8s;
+        }
+
+        @keyframes float {
+            from {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            80% {
+                opacity: 1;
+            }
+
+            to {
+                transform: translateY(-20vh);
+                opacity: 0;
+            }
+        }
+
+        /* Main container */
+
+        .container {
+            width: min(1100px, 92%);
+            margin: auto;
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 30px;
+        }
+
+        /* Indian flag */
+
+        .flag {
+            width: 180px;
+            height: 120px;
+            margin: 0 auto 35px;
+
+            border-radius: 8px;
+            overflow: hidden;
+
+            box-shadow:
+                0 15px 50px rgba(0,0,0,0.5);
+
+            animation: flagFloat 4s ease-in-out infinite;
+        }
+
+        .stripe {
+            height: 33.333%;
+        }
+
+        .saffron {
+            background: #ff9933;
+        }
+
+        .white {
+            background: white;
+            position: relative;
+        }
+
+        .green {
+            background: #138808;
+        }
+
+        .chakra {
+            position: absolute;
+
+            width: 36px;
+            height: 36px;
+
+            border: 3px solid #000080;
+            border-radius: 50%;
+
+            left: 50%;
+            top: 50%;
+
+            transform: translate(-50%, -50%);
+
+            animation: chakraSpin 10s linear infinite;
+        }
+
+        .chakra::after {
+            content: "";
+
+            position: absolute;
+
+            width: 5px;
+            height: 5px;
+
+            background: #000080;
+            border-radius: 50%;
+
+            left: 50%;
+            top: 50%;
+
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes chakraSpin {
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        @keyframes flagFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        /* Typography */
+
+        .tag {
+            display: inline-block;
+
+            padding: 8px 18px;
+            margin-bottom: 20px;
+
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 30px;
+
+            background: rgba(255,255,255,0.05);
+
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: clamp(42px, 7vw, 78px);
+            line-height: 1.05;
+
+            margin-bottom: 20px;
+
+            background: linear-gradient(
+                90deg,
+                #ff9933,
+                #ffffff,
+                #138808
+            );
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            max-width: 750px;
+            margin: auto;
+
+            color: #cbd5e1;
+
+            font-size: 20px;
+            line-height: 1.7;
+        }
+
+        /* Tech cards */
+
+        .technologies {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+
+            gap: 12px;
+
+            margin-top: 35px;
+        }
+
+        .tech {
+            padding: 10px 18px;
+
+            border-radius: 30px;
+
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+
+            backdrop-filter: blur(10px);
+
+            color: #e2e8f0;
+
+            transition: 0.3s;
+        }
+
+        .tech:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.12);
+        }
+
+        /* Button */
+
+        .button {
+            display: inline-block;
+
+            margin-top: 40px;
+
+            padding: 15px 32px;
+
+            border-radius: 30px;
+
+            text-decoration: none;
+
+            color: white;
+
+            background: linear-gradient(
+                90deg,
+                #ff9933,
+                #138808
+            );
+
+            box-shadow:
+                0 10px 30px rgba(0,0,0,0.3);
+
+            transition: 0.3s;
+        }
+
+        .button:hover {
+            transform: translateY(-4px);
+            box-shadow:
+                0 15px 40px rgba(0,0,0,0.5);
+        }
+
+        .footer {
+            margin-top: 45px;
+
+            color: #94a3b8;
+
+            font-size: 14px;
+        }
+
+        @media(max-width:600px) {
+
+            .hero {
+                padding: 40px 10px;
+            }
+
+            .flag {
+                width: 150px;
+                height: 100px;
+            }
+
+            .subtitle {
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="background">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+</div>
+
+<div class="container">
+
+    <main class="hero">
+
+        <div class="flag">
+            <div class="stripe saffron"></div>
+
+            <div class="stripe white">
+                <div class="chakra"></div>
+            </div>
+
+            <div class="stripe green"></div>
+        </div>
+
+        <div class="tag">
+            🇮🇳 Built in India • Powered by DevOps
+        </div>
+
+        <h1>
+            Welcome to<br>
+            India DevOps Platform
+        </h1>
+
+        <p class="subtitle">
+            A production-style DevOps project demonstrating
+            Python, Flask, Docker, Terraform, CI/CD and
+            cloud-ready infrastructure.
+        </p>
+
+        <div class="technologies">
+
+            <span class="tech">🐍 Python</span>
+            <span class="tech">🌐 Flask</span>
+            <span class="tech">🐳 Docker</span>
+            <span class="tech">🏗️ Terraform</span>
+            <span class="tech">⚙️ GitHub Actions</span>
+            <span class="tech">☁️ Cloud Ready</span>
+
+        </div>
+
+        <a href="/health" class="button">
+            Check Application Health →
+        </a>
+
+        <div class="footer">
+            Built as a real-world DevOps learning project
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
